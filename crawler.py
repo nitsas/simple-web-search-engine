@@ -7,8 +7,8 @@ import urlparse
 import socket      # to catch any socket.timeout exceptions read() might throw
 import sys         # to get the sys.stdout handle
 import pickle
-
-from SimpleHTMLParser import SimpleHTMLParser
+# modules I've written:
+from html_parser import SimpleHTMLParser
 
 PAGE_SIZE = 40000
 
