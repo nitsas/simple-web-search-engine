@@ -76,10 +76,7 @@ def clean_and_tokenize_all():
     'tokenized/x.html'.
     """
     # make directory 'tokenized/' if it doesn't already exist
-    try:
-        os.mkdir('tokenized')
-    except OSError:
-        pass
+    os.mkdir('tokenized')
     # process files 'html/1.html' - 'html/999.html'
     for id in xrange(1000):
         print 'processing ' + str(id) + '.html ...',
