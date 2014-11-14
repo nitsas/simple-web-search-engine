@@ -3,8 +3,8 @@
 import os
 import sys
 import getopt
-
-import SimpleSearchEngine
+# modules I've written:
+import search_engine
 
 def loop(searcher):
     """
@@ -112,7 +112,7 @@ def main(argv):
         elif opt in ('-m', '--makeindex'):
             make_index = True
     # main:
-    searcher = SimpleSearchEngine.SimpleSearchEngine()
+    searcher = search_engine.SimpleSearchEngine()
     if make_index:
         print 'An index will be created from scratch. (CTRL-C to exit)' 
         print 'Please be patient, this will take a while..'

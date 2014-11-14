@@ -4,7 +4,7 @@ import sys
 import time
 import pickle
 from math import log10
-
+# modules I've written:
 import morphosyntactic
 import vector_space
 import save_and_load
@@ -32,7 +32,7 @@ def make_index(tagged=True, time_it=False):
             text = vector_space.remove_stopwords_from_file(filename)
         else:
             # The files in 'tokenized/' need to be tagged. 
-            # (called from SimpleSearchEngine.py)
+            # (called from search_engine.py)
             print 'Tagging tokenized/' + str(id) + '.txt ... ',
             text = morphosyntactic.tag_file('tokenized/' + str(id) + '.txt')
             print '   done!'
