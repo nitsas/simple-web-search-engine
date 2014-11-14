@@ -9,6 +9,7 @@ import sys
 import string
 import re
 import nltk
+import glob
 
 _HTML_APOSTROPHE_RE = re.compile('(&rsquo;)|(&apos;)|(&#39;)')
 _HTML_OR_URL_ENTITY_RE = re.compile(r'(&[a-zA-Z]+;)|(&#\d+;)|(%[\da-fA-F]{2})')
@@ -69,50 +70,56 @@ def clean_query(query):
     query = query.translate(_TO_HYPHENS_AND_APOSTROPHES_TRANS)
     return query
 
-def clean_and_tokenize_all():
+def clean_and_tokenize_all(webpages_dir=None):
     """
-    Clean and tokenize files 'html/0.html' - 'html/999.html'.
-    After file 'html/x.html' is tokenized it will be saved as 
-    'tokenized/x.html'.
+    Clean and tokenize all '.html' files inside the webpages_dir directory.
+    
+    After file '<webpages_dir>/x.html' is tokenized it will be saved as 
+    'tokenized/x.txt'.
     """
+    # default dir where crawled webpages have been stored
+    if webpages_dir is None:
+        webpages_dir = './html/'
     # make directory 'tokenized/' if it doesn't already exist
-    os.mkdir('tokenized')
-    # process files 'html/1.html' - 'html/999.html'
-    for id in xrange(1000):
-        print 'processing ' + str(id) + '.html ...',
-        with open('html/' + str(id) + '.html', 'r') as f:
+    os.mkdir('./tokenized/')
+    # process '.html' files inside webpages_dir
+    for pathname in glob.glob(webpages_dir + '/*.html'):
+        print 'processing ' + pathname + ' ...',
+        with open(pathname, 'r') as f:
             html = f.read()
         tokenized_text = clean_and_tokenize(html)
-        with open('tokenized/' + str(id) + '.txt', 'w') as f:
+        # keep only the file's name, without path and '.html' extension
+        name = os.path.split(pathname)[1].rstrip('.html')
+        with open('./tokenized/' + name + '.txt', 'w') as f:
             f.write(tokenized_text)
         print '     done!'
 
 def main():
     """
-    Clean and tokenize files '0.html' - '999.html' in 'html/'. After file
-    'html/x.html' is tokenized it will be saved as 'tokenized/x.html'.
+    Clean and tokenize files '0.html' - '999.html' inside the './html/' dir. 
     
-    If an argument (filename) was given, clean, tokenize and print its contents.
+    If an argument was given, assume it's the name of a directory containing
+    the html pages we want to clean and tokenize (instead of the default
+    './html/' dir).
+    
+    After file '<dirname>/x.html' is tokenized it will be saved as 
+    './tokenized/x.html'.
     """
     if len(sys.argv) > 2:
         # more than 1 argument was given (error!)
-        sys.stderr.write('Error: Expected at most one argument, got:\n   ')
+        sys.stderr.write('Error: Expected at most one argument (dirname),' + \
+                         ' got:\n   ')
         sys.stderr.write(''.join([' ' + arg for arg in sys.argv[1:]]) + '\n')
         return 2
     elif len(sys.argv) == 2:
-        # exactly 1 argument was given (assume it's a filename)
-        try:
-            with open(sys.argv[1], 'r') as f:
-                html = f.read()
-        except IOError as e:
-            sys.stderr.write('Error: ' + str(e) + '\n')
-            return 1
-        print clean_and_tokenize(html)
-        return 0
+        # exactly 1 argument was given; it's the name of the directory
+        # containing the html pages we want to clean and tokenize
+        webpages_dir = sys.argv[1]
+        clean_and_tokenize_all(webpages_dir)
     else:
-        # no arguments were given - clean and tokenize pages 0-999 in './html'
+        # no arguments were given; use the default dir ('./html/')
         clean_and_tokenize_all()
-        return 0
+    return 0
 
 
 # The module takes a filename as input, tokenizes and prints its contents. 
