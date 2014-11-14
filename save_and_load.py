@@ -2,8 +2,8 @@
 
 from xml.sax import make_parser
 from xml.sax.handler import feature_namespaces
-
-import IndexLoader
+# modules I've written:
+import index_loader
 
 
 def save_index(index, file):
@@ -32,11 +32,10 @@ def load_index(file):
     # tell the parser we are not interested in XML namespaces:
     parser.setFeature(feature_namespaces, 0)
     # create a handler (type IndexLoader):
-    handler = IndexLoader.IndexLoader()
+    handler = index_loader.IndexLoader()
     # tell the parser to use our handler:
     parser.setContentHandler(handler)
     # now parse 'index.xml':
     parser.parse(file)
     # return the index:
     return handler.get_index()
-
