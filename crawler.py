@@ -68,10 +68,7 @@ class Crawler:
         # set the crawler's seeds
         self._to_crawl = set(self._seeds)
         # make a directory to save the pages in
-        try:
-            os.mkdir('./html')
-        except OSError:
-            pass
+        os.mkdir('./html')
         # create a parser (to get each page's links)
         parser = SimpleHTMLParser()
         
